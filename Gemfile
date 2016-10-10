@@ -17,3 +17,6 @@ gem 'spring', group: :development
 gem 'paperclip', '~> 5.1'
 gem 'masonry-rails', '~> 0.2.4'
 gem 'acts_as_votable', '~> 0.10.0'
+gem 'rails_12factor', group: :production
+
+ruby "1.9.3"
