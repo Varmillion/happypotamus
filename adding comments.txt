@@ -1,13 +1,13 @@
-rails g scaffold Comments post_id:integer:index body:text --skip
+rails g scaffold Comments pin_id:integer:index body:text --skip
 
 edit the migrate file and type drop_table :comments & run rake db:migrate
 
 in show.erb.html,
 <h4> Comments </h4>
   <div id="comments">
-    <%= render :partial => @post.comments %>
+    <%= render :partial => @pin.comments %>
   </div>
-<%= simple_form_for [@post, Comment.new] do |f| %>
+<%= simple_form_for [@pin, Comment.new] do |f| %>
   <p>
     <%= f.input :body, :label => "Add Comment",as: :text, input_html:{ rows:"3"} %>
   </p>
@@ -26,12 +26,12 @@ open comments controler and remove th code
 class CommentsController < ApplicationController
 
   def create
-    @post = Post.find(params[:post_id])
-    @comment = @post.comments.create(params[:comment])
+    @pin = Pin.find(params[:pin_id])
+    @comment = @pin.comments.create(params[:comment])
 
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to @post, notice: "comment was created successfully" }
+        format.html { redirect_to @pin, notice: "comment was created successfully" }
         format.json { render json: @comment, status: :created, location: @comment }
      else 
   	format.html { render action: "new" }
@@ -48,7 +48,7 @@ goto routes and add
 
 goto comments.r and 
 class Comment < ActiveRecord::Base
- after_accessible :body, :post_id
- belongs_to :post
+ after_accessible :body, :pin_id
+ belongs_to :pin
 end
 
