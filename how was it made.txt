@@ -1,0 +1,447 @@
+1. rails new pinboard
+
+2. add the haml gem which is a server gem its html abstraction markup for templates
+we'll add bootstrap sass gem and simple form gem too 
+
+3. rails g model Pin title:string description:text
+
+4. rake db:migrate
+
+5. rails g controller Pins
+in controller, add 
+def index
+end 
+
+def new
+end
+
+def create
+end
+
+6. and in routes file, add
+resources :pins
+root "pins#index"
+
+7. goto app>views>pins and create a new file index.html.haml for the main page
+
+8. now we goto controller and add defintions>> 
+def new 
+@pin = Pin.new 
+end
+def create 
+@pin= Pin.new(pin_params)
+end
+private
+def pin_params
+params.require (:pin).permit(:title, :description)
+end
+
+9. goto app>views>pins and create a new file new.html.haml for new forms
+= render 'form'
+=link_to "Back", root_path
+
+10. rails g simple_form:install --bootstrap
+
+11. goto app>views>pins and create a new file _form.html.haml will be partial
+= simple_form_for @pin, html: { multipart: true } do |f|
+  -if @pin.errors.any?
+    #errors
+      %h2
+      = pluralize(@pin.errors.count, "error")
+      prevent this Pin from saving
+      %ul
+      - @pin.errors.full_messages.each do |msg|
+        %li= msg
+
+  .form-group
+    = f.input :title, input_html: { class: 'form-control'}
+
+  .form-group
+    = f.input :description, input_html: { class: 'form-control'}
+    = f.button :submit, class: "btn btn-primary"
+
+
+12. go back to pins controller and under crete, add
+
+if @pin.save
+redirect_to @pin, notice: "Successfully created new Pin"
+else
+render 'new'
+end
+
+13. layouts>application.html.erb, rename to .haml
+
+!!! 5
+%html
+%head
+ %title Pin Board
+ = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+ = javascript_include_tag 'application', 'data-turbolinks-track' => true
+ = csrf_meta_tags
+%body
+ - flash.each do |name, msg |
+  =content_tag :div,msg, class: "alert alert-info"
+ = yield 
+ 
+14. GOTO PINS CONTROLL and on the top,
+before_action :find_pin, only: [:show, :edit, :update, :desroy]
+
+then add a PRIVATE DEFINition
+def find_pin
+@pin =Pin.find(params(:id))
+
+15.create show.html.haml in pins views
+%h1= @pin.title
+%p= @pin.description
+
+= link_to "Back", root_path
+
+16. now edit index.html.haml
+- @pins.each do |pin|
+  %h2= link_to pin.title, pin
+
+17. goto controller to define index as
+@pins = Pin.all.order("created_at DESC")
+
+18. in control we add edit, update, destroy defs
+ def edit 
+  end
+
+  def update 
+    if @pin.update(pin_params)
+      redirect_to @pin, notice: "pin was successfully updated!"
+    else
+      render 'edit'
+    end 
+  end
+
+  def destroy 
+    @pin.destroy
+    redirect_to root_path   
+  end
+
+19. make new file for edit page in views pins
+%h1 Edit Pin
+= render 'form'
+= link_to "cancel", pin_path
+
+20. edit show.html.haml by adding 
+= link_to "Edit", edit_pin_path
+= link_to "Delete", pin_path, method: :delete, data: { confirm: "are you Sure?" }
+
+21. edit index
+= link_to "New Pin", new_pin_path
+
+22. add devise gem for login
+
+23. bundle install
+
+24. rails g devise:install
+
+25. follow steps that appear, first copy this to config>development.rb
+
+ config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+26. run rails g devise:views
+
+27. rails g devise User
+rake db:migrate
+
+28. goto models>users.rb add
+has_many :pins
+
+29. goto pin.rb add 
+belongs_to :user
+
+30. run rails g migration add_user_id_to_pins user_id:integer:index
+then rake db:migrate
+(For testing)
+
+then rails c
+run all these
+@pin = Pin.first
+@user = User.first
+@pin.user = @user
+@pin
+@pin.save
+
+31. edit show.html.haml
+%p
+Submitted by 
+= @pin.user.email
+
+%br/
+
+to test, run rails c and type @pin = Pin.last
+
+32. goto pins controller and replace Pin.New by current_user.pins.build
+
+33. now try building a new post & submit.
+do this for all posts
+rails c
+@pin = Pin.find(1....8)
+@user = User.first
+@pin.user = @User
+@pin.save
+
+34. lets add bootstrap
+assets> stylesheets>application.css
+rename to *.*.scss and add 
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+35. to application.js add
+//= require bootstrap-sprockets
+
+36. edit layout in views and under body,
+%body
+ %nav.navbar.navbar-default
+  .container
+   .navbar-brand= link_to "Pin Board", root_path
+
+   - if user_signed_in?
+    %ul.nav.navbar-nav.navbar-right
+     %li= link_to "New Pin", new_pin_path
+     %li= link_to "Account", edit_user_registration_path
+     %li= link_to "Sign Out", destroy_user_session_path, method: :delete
+   - else
+    %ul.nav.navbar-nav.navbar-right
+     %li= link_to "Sign Up", new_user_registration_path
+     %li= link_to "Sign In", new_user_session_path
+ .container 
+  - flash.each do |name, msg |
+   =content_tag :div,msg, class: "alert alert-info"
+  = yield 
+
+37. from index.haml 
+remove 1st line as its been devined in layout
+
+38. edit new.html in pins
+.col-md-6.col-md-offset-3
+ %h1 New
+ = render 'form'
+ = link_to "Back", root_path
+
+39. do the same for edit.htm 
+
+40. now install the gem for paperclip
+
+& in model of pins add
+    has_attached_file :image, styles: { medium: "300x300>" }  
+    validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+
+41. rails generate paperclip pin image
+
+42. add to pin.rb
+    has_attached_file :image, styles: { medium: "300x300>" }  
+    validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+end
+
+43. edit form.html to add image
+
+44. add :image to pin params in pin controller
+
+45. to display, goto show.html add 
+= image_tag @pin.image.url(:medium)
+
+46. goto index.html edit to
+- @pins.each do |pin|
+  = link_to (image_tag pin.image.url), pin
+  %h2= link_to pin.title, pin
+
+47. for java script we add gem 'masonry-rails', '~> 0.2.4'
+add this to application.js
+//= require masonry/jquery.masonry
+
+48. to pins.coffee add
+$ ->
+  $('#pins').imageLoaded ->
+    $('#pins').masonry
+      itemSelector: '.box'
+      isFitWidth: true
+
+49. reset server if error comes
+
+50. goto index,
+#pins.transitions-enabled
+ - @pins.each do |pin|
+  .box.panel.panel-default
+   = link_to (image_tag pin.image.url(:medium)), pin
+   .panel-body
+    %h2= link_to pin.title, pin
+
+51. in application.css add
+*= require 'masonry/transitions'
+and then add some styling 
+
+body {
+  background: #E9E9E9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-weight: 100;
+}
+
+nav {
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.22);
+  .navbar-brand {
+  a {
+    color: #BD1E23;
+    font-weight:bold;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  }
+}
+
+#pins {
+  margin: 0 auto;
+  width:100%;
+  .box {
+    margin: 10px;
+    width: 350px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+    border-radius: 7px;
+    text-align: center;
+    img {
+      max-width: 100%;
+      margin-top: 10%;
+      height: auto;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 0;
+      padding: 25px 10px;
+      a {
+        color: #474747;
+      }
+    }
+    .user {
+      font-size: 12px;
+      border-top: 1px solid #EAEAEA;
+      padding: 15px;
+      margin: 0;
+      }
+    }
+}
+
+#edit_page {
+  .current_image {
+    img {
+      display: block;
+      margin: 20px 0;
+  }
+  }
+}
+
+#pin_show {
+    .panel-heading {
+    padding: 0;
+  }
+  .pin_image {
+    img {
+      max-width: 100%;
+      width: 100%;
+      display: block;
+      margin: 0 auto;
+
+    }
+  }
+  .panel-body {
+    padding: 35px;
+    h1 {
+      margin: 0 0 10px 0;
+    }
+    .description {
+      color: #868686;
+      line-height: 1.75;
+      margin: 0;
+    }
+  }
+  .panel-footer {
+    padding: 20px 35px;
+    p {
+      margin: 0;
+    }
+    .user {
+      padding-top: 8px;
+    }
+  }
+}
+
+textarea {
+  min-height: 250px;
+}
+
+52. goto show.html
+#pin_show.row
+  .col-md-8.col-md-offset-2
+    .panel.panel-default
+      .panel-heading.pin_image
+        = image_tag @pin.image.url
+      .panel-body
+        %h1= @pin.title
+        %p.description= @pin.description
+        %p
+        Submitted by 
+        = @pin.user.email
+      .panel-footer
+        .row
+          .col-md-6
+            %p.user
+            Submitted by
+            = @pin.user.email
+          .col-md-6
+            .btn-group.pull-right
+              = link_to "Edit", edit_pin_path, class: "btn btn-default"
+              = link_to "Delete", pin_path, method: :delete, data: { confirm: "are you Sure?" }, class: "btn btn-default"
+
+53. in index.html, add
+%p.user
+    Submitted by
+    = pin.user.email
+
+54. now lets vote
+add acts_as_votable gem
+gem 'acts_as_votable', '~> 0.10.0'
+
+55. rails generate acts_as_votable:migration
+rake db:migrate
+
+56. add acts_as_votable in pin model 
+
+57. now gotoroutes file and
+
+Rails.application.routes.draw do
+  devise_for :users
+  resources :pins do
+    member do
+      put "like", to: "pins#upvote"
+    end
+  end
+  
+    root "pins#index"
+end
+
+
+58. in pin controller add def 
+  def upvote
+    @pin.upvote_by current_user
+    redirect_to :back
+  end 
+
+  and in before action, add upvote action
+
+59. goto show html
+
+add under
+            .btn-group.pull-right
+              = link_to like_pin_path(@pin), method: :put, class: "btn btn-default" do
+                %span.glyphicon.glyphicon-heart
+                  = @pin.get_upvotes.size
+
+60. add to pins controller
+ before_action :authenticate_user!, except: [:show, :index]
+
+61. edit all forms

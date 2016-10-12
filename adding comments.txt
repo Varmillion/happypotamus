@@ -1,0 +1,54 @@
+rails g scaffold Comments pin_id:integer:index body:text --skip
+
+edit the migrate file and type drop_table :comments & run rake db:migrate
+
+in show.erb.html,
+<h4> Comments </h4>
+  <div id="comments">
+    <%= render :partial => @pin.comments %>
+  </div>
+<%= simple_form_for [@pin, Comment.new] do |f| %>
+  <p>
+    <%= f.input :body, :label => "Add Comment",as: :text, input_html:{ rows:"3"} %>
+  </p>
+  <p> <%= f.submit "Comment", class:"btn btn-primary" %></p>
+<% end %>
+
+make _comments.html.erb in views>comments,
+<%= div_for(comment) do%>
+<p>
+<strong> Posted <%= time_ago_in_words(comment.created.created_at) %> </strong></br>
+<%= h(comment.body) %>
+</p>
+<% end %>
+
+open comments controler and remove th code 
+class CommentsController < ApplicationController
+
+  def create
+    @pin = Pin.find(params[:pin_id])
+    @comment = @pin.comments.create(params[:comment])
+
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to @pin, notice: "comment was created successfully" }
+        format.json { render json: @comment, status: :created, location: @comment }
+     else 
+  	format.html { render action: "new" }
+        format.json { render json: @comment.errors, status: :unprocessable_entity } 
+      end
+    end
+  end
+end
+
+goto routes and add
+ resources :pins do
+    resources :comments
+  end
+
+goto comments.r and 
+class Comment < ActiveRecord::Base
+ after_accessible :body, :pin_id
+ belongs_to :pin
+end
+
