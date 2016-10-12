@@ -1,0 +1,14 @@
+
+<% if user_signed_in? %>
+<%= render 'comments/form' %>
+<% end %>
+<% @comments.each do |comment| %>
+<p><b> <%= comment.user.email %> </b></p>
+<p> <%= comment.content %> </p>
+
+<% if current_user == comment.user %>
+<%= link_to "Delete", [comment.pin, comment], method: :delete %>
+<%= link_to "Edit", edit_pin_comment_path(comment.pin, comment) %>
+<% end %>
+<% end %>
+ 

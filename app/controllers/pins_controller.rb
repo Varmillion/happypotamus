@@ -11,6 +11,10 @@ class PinsController < ApplicationController
 
   end
 
+  def show
+    @comments = Comment.where(pin_id: @pin).order("created_at DESC")
+  end
+
   def create 
     @pin= current_user.pins.build(pin_params)
     if @pin.save
@@ -43,11 +47,12 @@ class PinsController < ApplicationController
 
   
   private
+
   def pin_params
     params.require(:pin).permit(:title, :description, :image)
   end
 
   def find_pin
-    @pin =Pin.find(params[:id])
+    @pin = Pin.find(params[:id])
   end
 end
