@@ -1,0 +1,24 @@
+<h1 class="center" style="text-transform: uppercase"> <%= full_name %> </h1> 
+<p class="center"> <%= @user.user_name %></p>
+
+
+
+
+
+
+
+<hr id="profile_line">
+<h2 STYLE="font-size:16px; text-align: center;"> POSTS BY USER </h2>
+<div id="pins" class="transitions-enabled">
+<% @user_pins.each do |pin| %>
+	<div class="box panel panel-default">
+	  <%= link_to (image_tag pin.image.url), pin %>
+   	<div class="panel-body">
+      <%h2= link_to pin.title, pin %>
+      <p>
+        Submitted by <%= pin.user.user_name %>
+      </p>
+    </div>
+    </div>
+<% end %>
+</div>

@@ -22,7 +22,7 @@ body {
 	background: #E9E9E9;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h4, h5, h6 {
 font-weight: 100;
 }
 
@@ -129,4 +129,17 @@ textarea {
 
 submitButton {
 	margin-top:0px;
+}
+
+
+#topbar {
+	
+}
+
+#profile_line {
+	border-color:rgba(0,0,0,.1);
+
+}
+.center {
+	text-align: center;
 }
