@@ -143,3 +143,20 @@ submitButton {
 .center {
 	text-align: center;
 }
+
+.ProfileBox {
+	width: 200px;
+	height: 200px;
+	border-radius:100px;
+	margin:auto;
+    overflow: hidden;
+
+}
+
+.img{
+	display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+    border-radius:5px;
+}

@@ -9,6 +9,8 @@
 %body
  %nav.navbar.navbar-default
   .container#topbar
+   =image_tag "logo.png", style: "margin-top:5px; margin-bottom:5px; max-height: 50px; max-width: 50px;"
+ 
    .navbar-brand= link_to "HappyPotamus", root_path
 
    - if user_signed_in?

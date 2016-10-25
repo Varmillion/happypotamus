@@ -1,11 +1,12 @@
 <h1 class="center" style="text-transform: uppercase"> <%= full_name %> </h1> 
+
+<div class="container center">
+  <div class="ProfileBox">
+    <%= image_tag @user.avatar.url(:medium), class: "ProfileBox img" %>
+  </div>
+</div>
+<br>
 <p class="center"> <%= @user.user_name %></p>
-
-
-
-
-
-
 
 <hr id="profile_line">
 <h2 STYLE="font-size:16px; text-align: center;"> POSTS BY USER </h2>
