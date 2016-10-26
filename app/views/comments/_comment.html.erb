@@ -1,5 +1,5 @@
 <% @comments.each do |comment| %>
-<p><b> <%= comment.user.user_name %> </b></p>
+<p><b><%= image_tag "@user.avatar.url()" %> <%= comment.user.user_name %> </b></p>
 <p> <%= comment.content %> </p>
 
 <% if current_user == comment.user %>

@@ -9,14 +9,17 @@
 %body
  %nav.navbar.navbar-default
   .container#topbar
-   =image_tag "logo.png", style: "margin-top:5px; margin-bottom:5px; max-height: 50px; max-width: 50px;"
+   -if user_signed_in?
+    = link_to (image_tag (current_user.avatar.url(:thumb)), class: "logo"), current_user
+   -else
+    = link_to (image_tag "logo.png", class: "logo"), root_path
  
    .navbar-brand= link_to "HappyPotamus", root_path
 
    - if user_signed_in?
     %ul.nav.navbar-nav.navbar-right
      %li= link_to "New Post", new_pin_path
-     %li= link_to "Settings", edit_user_registration_path
+     %li= link_to "Edit account", edit_user_registration_path
      %li= link_to "Sign Out", destroy_user_session_path, method: :delete
    - else
     %ul.nav.navbar-nav.navbar-right
