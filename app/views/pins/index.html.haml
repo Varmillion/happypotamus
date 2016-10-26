@@ -4,6 +4,9 @@
    = link_to (image_tag pin.image.url), pin
    .panel-body
     %h2= link_to pin.title, pin
+    = link_to (image_tag(pin.user.avatar.url(:thumb), class: "img-circle logo", style: "margin-top:0px;")), user_path(pin.user)
     %p.user
-    Submitted by
-    = pin.user.user_name
+    by
+    =link_to ( pin.user.user_name ), user_path(pin.user)
+
+
