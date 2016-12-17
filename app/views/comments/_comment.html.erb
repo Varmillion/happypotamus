@@ -7,7 +7,6 @@
 <% if current_user == comment.user %>
 <%= link_to "Edit", edit_pin_comment_path(comment.pin, comment), style:"padding-left:10px;" %>
 <%= link_to "Delete", [comment.pin, comment], method: :delete %>
-
 <% end %>
 <% end %>
 

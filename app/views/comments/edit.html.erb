@@ -1,8 +1,8 @@
 <%= form_for([@pin, @comment]) do |f| %>
   <div class="container">
     <div class="col-md-4">
-    <%= f.text_area :content, :placeholder => "Appraise", size: "15x1", :class => 'text2' %>
-    <%= f.submit 'Appraise', :class => 'submitButton btn btn-default' %>
+    <%= f.text_area :content, :placeholder => "Edit comment", size: "15x1", :class => 'text2' %>
+    <%= f.submit 'Edit', :class => 'submitButton btn btn-default' %>
     </div>
   </div>
 <% end %>
