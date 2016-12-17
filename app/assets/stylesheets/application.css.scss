@@ -18,6 +18,9 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+@import "font-awesome-sprockets";
+@import "font-awesome";
+
 body {
 	background: #E9E9E9;
 }
@@ -52,6 +55,7 @@ nav {
 	  img {
 	    max-width: 100%;
 	    margin-top: 10%;
+	    margin-left: 0px;
 	    height: auto;
 	  }
 	  h2 {

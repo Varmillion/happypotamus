@@ -18,13 +18,13 @@
 
    - if user_signed_in?
     %ul.nav.navbar-nav.navbar-right
-     %li= link_to "New Post", new_pin_path
-     %li= link_to "Edit account", edit_user_registration_path
-     %li= link_to "Sign Out", destroy_user_session_path, method: :delete
+     %li= link_to icon('plus', class: 'fa-2x fa-fw'), new_pin_path
+     %li= link_to icon('cog', class: 'fa-2x fa-fw'), edit_user_registration_path
+     %li= link_to icon('sign-out', class: 'fa-2x fa-fw'), destroy_user_session_path, method: :delete
    - else
     %ul.nav.navbar-nav.navbar-right
-     %li= link_to "Sign Up", new_user_registration_path
-     %li= link_to "Sign In", new_user_session_path
+     %li= link_to icon('user-plus', class: 'fa-2x fa-fw') , new_user_registration_path
+     %li= link_to icon('sign-in', class: ' fa-2x fa-fw'), new_user_session_path
  .container 
   - flash.each do |name, msg |
    =content_tag :div,msg, class: "alert alert-info"

@@ -16,10 +16,10 @@
             = render 'comments/comment'
           .col-md-6
             .btn-group.pull-right
-              = link_to like_pin_path(@pin), method: :put, class: "btn btn-default" do
-                %span.glyphicon.glyphicon-heart
-                  = @pin.get_upvotes.size
               - if user_signed_in?
                 - if current_user == @pin.user
-                  = link_to "Edit", edit_pin_path, class: "btn btn-default"
-                  = link_to "Delete", pin_path, method: :delete, data: { confirm: "are you Sure?" }, class: "btn btn-default"
+                  = link_to icon('pencil', class:'fa-2x'), edit_pin_path, class: "btn btn-default"
+                  = link_to icon('trash', class:'fa-2x'), pin_path, method: :delete, data: { confirm: "are you Sure?" }, class: "btn btn-default"
+              = link_to like_pin_path(@pin), method: :put, class: "btn btn-default" do
+                %span.fa.fa-heart.fa-2x
+                = @pin.get_upvotes.size
